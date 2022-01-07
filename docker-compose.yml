@@ -1,0 +1,30 @@
+version: '3.5'
+
+services:
+
+  public-api:
+    build:
+      context: .
+      dockerfile: system/Dockerfile
+    ports:
+      - "8001:80"
+    entrypoint: /opt/bin/entry_point_public_api.sh
+    environment:
+      - ENVIRONMENT=local
+    depends_on:
+      - redis
+
+  redis:
+    container_name: my_redis-cont
+    image: "redis:alpine"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+    ports:
+      - "6379:6379"
+    volumes:
+      # save redisearch data to your current working directory
+      - ./my_redis-data:/data
+
+
+volumes:
+  redis-data:
